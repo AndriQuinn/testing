@@ -11,6 +11,9 @@ export async function POST(req: Request) {
     if (error) return error
 
     const payload = await req.json();
+    console.log(payload)
+    const action = payload.action
+
 
     
     

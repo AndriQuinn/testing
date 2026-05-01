@@ -1,20 +1,33 @@
-export async function POST(req: Request, res: Response) {
-    const event = req.headers.get('x-github-event');
+import { createHmac } from 'crypto'
+
+export async function POST(req: Request) {
+
+    const rawBody = await req.text()
+    const signature = req.headers.get('x-hub-signature-256')
+    const event = req.headers?.get('x-github-event')
+
+    const error = checkRequest(event, signature, rawBody)
+    if (error) return error
+
     const payload = await req.json();
-    console.log('Payload:', req.body);
+
+    
+    
+    
     return new Response('OK', { status: 200 })
 }
 
+function checkRequest(event: string | null, signature: string | null, rawBody: string) {
 
-// // server.js
-// const express = require('express');
-// const app = express();
-// app.use(express.json());
+    const secret = process.env.GITHUB_WEBHOOK_SECRET!
+    const mySignature = 'sha256=' + createHmac('sha256', secret)
+        .update(rawBody)
+        .digest('hex')
+    
+    if (signature != mySignature) return  new Response('Unauthorized', { status: 401 })
+    if (event != 'pull_request') return new Response('Event Ignored', { status: 200 });   
+}
 
-// app.post('/webhook', (req, res) => {
-//   console.log('Event received:', req.headers['x-github-event']);
-//   console.log('Payload:', req.body);
-//   res.status(200).send('OK');
-// });
-
-// app.listen(3000, () => console.log('Running on port 3000'));
+async function aiReview() {
+    const response = await fetch('')
+}

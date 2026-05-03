@@ -1,4 +1,5 @@
 import { createHmac } from 'crypto'
+import { stat } from 'fs/promises'
 
 export async function POST(req: Request) {
 
@@ -14,20 +15,17 @@ export async function POST(req: Request) {
 
     if (action != 'opened') return new Response('Event Ignored', { status: 200 })
     
-    const diff = payload.pull_request.diff_url
-    const diffResult = await fetchDiff(diff)
+    const getDiff = await checkDiff(payload.pull_request.diff_url)
+    if (!getDiff.ok) new Response(getDiff.message, { status: 500 })    
 
-    if (!diffResult.ok) return new Response('Something wrong happened', { status: 401 })    
-
-    const diffText = diffResult.content
+    const diffText = getDiff.content
     const reviewResult = await aiReview(diffText)
 
-    if (!reviewResult.ok) return new Response('Something wrong happened', { status: 401 })    
+    if (!reviewResult.ok) return new Response('Something wrong happened', { status: 500 })
+    
+    const checkPostReview = await postReview(reviewResult.content, payload)
 
-    return new Response(JSON.stringify({
-        messsage: 'OK',
-        review: reviewResult.content
-    }), { status: 200  })
+    return new Response(JSON.stringify(checkPostReview), { status: checkPostReview.status  })
 }
 
 // --- Functions ---
@@ -46,7 +44,7 @@ function checkRequest(event: string | null, signature: string | null, rawBody: s
 }
 
 // --- Get AI Review ---
-async function aiReview(diff: string) {
+async function aiReview(diff: string | null) {
 
     const MODELS = [
         "gemini-3.1-flash-lite-preview", 
@@ -71,7 +69,7 @@ async function aiReview(diff: string) {
 }
 
 // --- Fetch Gemini API ---
-async function fetchGeminiApi(model: string, diff: string) {
+async function fetchGeminiApi(model: string, diff: string | null) {
 
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${process.env.GEMINI_API_KEY}`,
         {
@@ -123,4 +121,41 @@ async function fetchDiff(diff: string) {
     const data = await response.text()
 
     return { ok: response.ok, status: response.status, content: data }
+}
+
+async function checkDiff(diffUrl: string) {
+
+    const diffResult = await fetchDiff(diffUrl)
+
+    if (!diffResult.ok) return {  message: 'Failed to fetch diff', ok: diffResult.ok, status: 500, content: null }
+    if (!diffResult.content) return {  message: 'Empty diff', ok: false, status: 500, content: null }
+    
+    return { ok: diffResult.ok, status: diffResult.status, content: diffResult.content }
+}
+
+async function postReview(review: string, payload: any) {
+
+    const owner     = payload.repository.owner.login  
+    const repo      = payload.repository.name         
+    const prNumber  = payload.pull_request.number     
+
+    const url = `https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}/reviews`
+
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${process.env.GITHUB_TOKEN}`,
+            'Accept': 'application/vnd.github+json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            body: review,
+            event: 'COMMENT'
+        })
+    })
+
+    if (!response.ok) return { message: 'Failed to post review', ok: false, status: response.status }
+
+    const data = await response.json()
+    return { ok: true, status: response.status, data }
 }

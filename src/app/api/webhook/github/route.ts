@@ -154,7 +154,7 @@ async function postReview(review: string, payload: any) {
         })
     })
 
-    if (!response.ok) return { message: 'Failed to post review', ok: false, status: response.status }
+    if (!response.ok) return { message: 'Failed to post review', ok: false, status: response.status, data: response.json }
 
     const data = await response.json()
     return { ok: true, status: response.status, data }

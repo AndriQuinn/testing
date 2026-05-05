@@ -1,4 +1,5 @@
 import { createHmac } from 'crypto'
+import jwt from 'jsonwebtoken'
 
 export async function POST(req: Request) {
 
@@ -141,6 +142,8 @@ async function checkDiff(diffUrl: string) {
 
 async function postReview(review: string, payload: any) {
 
+    const installationToken = await getInstallationToken()
+
     const owner     = payload.repository.owner.login  
     const repo      = payload.repository.name         
     const prNumber  = payload.pull_request.number     
@@ -150,7 +153,7 @@ async function postReview(review: string, payload: any) {
     const response = await fetch(url, {
         method: 'POST',
         headers: {
-            'Authorization': `Bearer ${process.env.GITHUB_TOKEN}`,
+            'Authorization': `Bearer ${installationToken}`,
             'Accept': 'application/vnd.github+json',
             'Content-Type': 'application/json'
         },
@@ -167,4 +170,39 @@ async function postReview(review: string, payload: any) {
     if (!response.ok) return { message: 'Failed to post review', ok: false, status: response.status, data: data }
     
     return { ok: true, status: response.status, data }
+}
+
+function createJWT() {
+
+    const now = Math.floor(Date.now() / 1000)
+
+    return jwt.sign(
+        {
+            iss: process.env.GITHUB_APP_ID,  // App ID
+            iat: now,                        // issued now
+            exp: now + 600                   // expires in 10 minutes
+        },
+        process.env.GITHUB_PRIVATE_KEY!,
+        { algorithm: 'RS256' }
+    )
+}
+
+async function getInstallationToken() {
+
+  // create JWT
+    const jwtToken = createJWT()
+    // exchange for installation token
+    const response = await fetch(
+        `https://api.github.com/app/installations/${process.env.GITHUB_INSTALLATION_ID}/access_tokens`,
+        {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${jwtToken}`,
+                'Accept': 'application/vnd.github+json'
+            }
+        }
+    )
+
+    const data = await response.json()
+    return data.token  // installation token — valid for 1 hour
 }

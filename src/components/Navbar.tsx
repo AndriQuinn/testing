@@ -15,7 +15,7 @@ export default function Navbar() {
 function Logo() {
     return (
         <div>
-            <h1 className="font-semibold text-xl"> Shoa </h1>
+            <h1 className="font-semibold text-xl text-gradient-blue"> Shoa </h1>
         </div>
     )
 }
@@ -35,7 +35,7 @@ function CTAButtons() {
         <div className="flex justify-between gap-x-1">
             <Button 
                 icon={"/github.svg"}
-                label="Github"
+                label="GitHub"
                 onClick={() => console.log("Heelo")}
                 className="border-color-gray font-gray-transition-blue py-2 px-4"
             />

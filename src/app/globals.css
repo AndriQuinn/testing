@@ -40,6 +40,10 @@
     background-color: var(--light-blue);
   }
 
+  .border-gray-no-transition {
+    border: 1px solid var(--gray)
+  }
+
   .border-color-gray {
     border-color: var(--gray);
     transition: border-color 0.3s ease;

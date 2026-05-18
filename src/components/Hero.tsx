@@ -6,7 +6,7 @@ import { ArrowDownToLine, Shield, Dot } from "lucide-react"
 
 export default function Hero() {
     return (
-        <div className="w-full grid grid-cols-1 gap-x-5 p-2 md:grid-cols-2 md:p-16 items-center" >            
+        <div className="grid grid-cols-1 items-center gap-x-5 p-2 md:grid-cols-2" >            
             <LeftBanner/>
             <RightBanner/>
             
@@ -56,7 +56,7 @@ function CTAButtons({className}: {className: string}) {
         <div className={`flex flex-col w-full items-center justify-center gap-y-3 md:w-auto md:flex-row md:justify-between md:gap-x-3 md:gap-y-0 ${className}`}>
             <Button 
                 icon={ArrowDownToLine}
-                label="Install on Github"
+                label="Install on GitHub"
                 onClick={() => console.log("Heelo")}
                 className="background-gradient-blue font-white py-3 px-4 shadow-2xl transition hover:-translate-y-1 md:py-3 md:px-6 "
             />

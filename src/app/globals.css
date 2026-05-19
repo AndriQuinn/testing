@@ -58,6 +58,10 @@ body {
   border-bottom: 1px solid var(--gray);
 }
 
+.border-top-color-gray {
+  border-top: 1px solid var(--gray);
+}
+
 .border-blue {
   border: 1px solid var(--header);
 }

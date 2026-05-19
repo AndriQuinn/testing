@@ -1,8 +1,8 @@
 import "@/app/globals.css";
-import TextBox from "./TextBox";
 import { Search, Activity, Shield, LayoutGrid, Form, Code } from "lucide-react";
-import { LucideIcon } from "lucide-react"
-import Image from "next/image"
+import { LucideIcon } from "lucide-react";
+import Image from "next/image";
+import { robotoCondensed } from "./Fonts";
 
 type FeatureBoxProps = {
     icon: LucideIcon | string
@@ -23,7 +23,7 @@ function Header() {
     return (
         <div className="flex flex-col justify-center gap-y-4  text-center">
             <h1 className="uppercase text-xs font-semibold font-blue"> Features </h1>
-            <h1 className=" text-xl md:text-4xl font-medium "> Everything you need,<br/> nothing you don't</h1>
+            <h1 className={` text-xl md:text-4xl font-medium ${robotoCondensed.className}`}> Everything you need,<br/> nothing you don't</h1>
         </div>
     )
 }
@@ -51,7 +51,7 @@ function FeatureBox({ icon: Icon, label, text }: FeatureBoxProps) {
                     <Icon size={16} className="font-blue"/>
                 }
             </div>
-            <h2 className="text-xs text-left font-semibold"> {label} </h2>
+            <h2 className={`text-xs text-left font-semibold ${robotoCondensed.className}`}> {label} </h2>
             <p className="text-xs font-gray leading-relaxed"> {text} </p>
         </div>
     )

@@ -4,11 +4,14 @@ import TextBox from "./TextBox"
 import Button from "./ButtonIcon"
 import { ArrowDownToLine, Shield, Dot } from "lucide-react"
 import PageTransition from "./PageTransition"
+import Link from "next/link"
+import { robotoCondensed } from "./Fonts"
+
 
 export default function Hero() {
     return (
         <PageTransition>
-            <div className="grid grid-cols-1 items-center gap-x-5 md:grid-cols-2" >            
+            <div className="grid grid-cols-1 gap-y-5 items-center gap-x-5 md:grid-cols-2 md:gap-y-0" >            
                 <LeftBanner/>
                 <RightBanner/>
             </div>
@@ -23,7 +26,7 @@ function LeftBanner() {
                 <Dot size={16}/>
                 Powered by Gemini AI [Free Tier]
             </span>
-            <h1 className="font-semibold text-3xl text-center md:text-6xl md:text-left">
+            <h1 className={`font-semibold text-3xl text-center md:text-6xl md:text-left ${robotoCondensed.className}`}>
                 Code reviews
                 on every <span className="text-gradient-blue">  pull request. </span>
                 Automatically.
@@ -62,12 +65,14 @@ function CTAButtons({className}: {className: string}) {
                 onClick={() => console.log("Heelo")}
                 className="background-gradient-blue font-white py-3 px-4 shadow-1xl transition hover:-translate-y-1 md:py-3 md:px-6 cyan-shadow"
             />
-            <Button 
-                icon={"/github.svg"}
-                label="View Source"
-                onClick={() => console.log("Heelo")}
-                className="border-color-gray font-gray-transition-blue py-3 px-4 transition hover:-translate-y-1 md:py-3 md:px-6"
-            />
+            <a href="https://github.com/AndriQuinn/ai-code-review-bot">
+                <Button 
+                    icon={"/github.svg"}
+                    label="View Source"
+                    onClick={() => console.log("Heelo")}
+                    className="border-color-gray font-gray-transition-blue py-3 px-4 transition hover:-translate-y-1 md:py-3 md:px-6"
+                />
+            </a>
         </div>
     )
 }

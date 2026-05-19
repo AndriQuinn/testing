@@ -1,5 +1,6 @@
 import "@/app/globals.css";
 import TextBox from "./TextBox";
+import PageTransition from "./PageTransition";
 
 type StepProps = {
     noOfSteps: string
@@ -20,9 +21,8 @@ function Header() {
     return (
         <div className="flex flex-col justify-center gap-y-5  text-center">
             <h1 className="uppercase text-xs font-semibold font-blue"> How it works </h1>
-            <h1 className=" text-xl md:text-5xl font-medium "> From PR open to review posted <br/> in seconds</h1>
+            <h1 className=" text-xl md:text-4xl font-medium "> From PR open to review posted <br/> in seconds</h1>
             <TextBox text="No configuration. No manual triggers. Just open a PR."/>
-            
         </div>
     )
 }
@@ -42,11 +42,11 @@ function StepsSection() {
 function StepsInfo({ noOfSteps, label, text} : StepProps) {
     return(
         <div className="flex flex-col items-center justify-center gap-y-4 my-10">
-            <div className="flex justify-center items-center border rounded-full border-gray-no-transition p-6 w-10 h-10 font-gray">
+            <div className="flex justify-center items-center border rounded-full border-gray-no-transition p-6 w-10 h-10 font-gray bg-white">
                 {noOfSteps}
             </div>
             <h2 className="text-sm font-semibold"> {label} </h2>
-            <p className="text-xs font-gray text-center"> {text} </p>
+            <p className="text-xs font-gray text-center leading-relaxed"> {text} </p>
         </div>
     )
 }

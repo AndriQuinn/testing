@@ -4,7 +4,7 @@ import Button from "@/components/ButtonIcon"
 
 export default function Navbar() {
     return (
-        <div className="flex flex-col md:flex-row justify-between items-center px-16 py-4 border-bottom-color-gray">
+        <div className="flex flex-col bg-white md:flex-row justify-between items-center px-16 py-4 border-bottom-color-gray top-0 sticky w-full">
             <Logo/>
             <Pages/>
             <CTAButtons/>

@@ -1,3 +1,4 @@
+import "@/app/globals.css"
 
 type TextBoxProps = {
     text: string,

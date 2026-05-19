@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar"
 import Hero from "@/components/Hero";
 import HowItWorksSection from "@/components/HowItWorks";
 import FeaturesSection from "@/components/Features";
+import CTASection from "@/components/CTASection";
 
 export default function HomePage() {
   return (
@@ -11,6 +12,7 @@ export default function HomePage() {
           <Hero/>
           <HowItWorksSection/>
           <FeaturesSection/>
+          <CTASection/>
         </div>
     </div>
   );
